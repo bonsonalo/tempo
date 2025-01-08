@@ -225,6 +225,8 @@ def camel_to_snake(camel):
 camel_to_snake(question)
 
 """
+
+"""
 def coke():
     total = 0
     while total < 50:
@@ -242,3 +244,114 @@ def coke():
             print(f"amount owed: {owe} ")
             break
 coke()
+
+"""
+"""
+   # twttr project
+def twitter():
+    ask = input("give a string: ")
+    for char in ask:
+        if char not in ["a", "e", "i", "o", "u"]:
+            print(char, end="")
+        else:
+            print("", end="")
+
+twitter()
+
+"""
+
+
+
+# def main():
+#     plate = input("plate: ")
+#     if is_valid(plate):
+#         print(plate)
+#     else:
+#         print("Invalid")
+
+# def is_valid(s):
+#     s = s.uppper()
+#     for char in s:
+
+#         while 2 < char.len() < 6:
+#             s[0 : 2].isalpha()
+            
+#             return True
+    
+
+
+
+# main()
+
+
+def main():
+    plate = input("plate: ")
+    if is_valid(plate):
+        print("Valid")
+    else:
+        print("Invalid")
+def is_valid(s):
+    # rule 1: length between 2 and 6 characters
+    2 < len(s) < 6
+    # rule 2: must start with atleast 2 letters
+    s[0, 2].isalpha()
+    is_num = False
+    count = 0
+    for i in range(len(s)):
+        if s[i].isdigit():
+            is_num = True
+            count+=1
+        if s[i].isalpha():
+            is_num = False
+
+        if count > 0 and is_num == False:
+            return False
+
+
+main()
+
+# while True:
+#     try:
+#         x = int(input("what is x? "))
+#     except:
+#         print("x is not an integer")
+#     else:
+#         break
+# print(f"x is {x}")
+
+
+
+
+def main():
+    plate = input("plate: ")
+    if is_valid(plate):
+        print("Valid")
+    else:
+        print("Invalid")
+def is_valid(s):
+    # rule 1: length between 2 and 6 characters
+    if not (2 <= len(s) <= 6):
+        return False
+
+    # rule 2: must start with atleast 2 letters
+    if not s[0: 2].isalpha():
+        return False
+    # rule 3: letters and digits only
+    for char in s:
+        if not (char.isalpha() or char.isdigit()):
+            return False
+        
+    is_num = False
+    count = 0
+    for i in range(len(s)):
+        if s[i].isdigit():
+            is_num = True
+            count+=1
+        if s[i].isalpha():
+            is_num = False
+
+        if count > 0 and is_num == False:
+            return False
+
+
+main()
