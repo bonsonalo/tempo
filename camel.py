@@ -284,31 +284,31 @@ twitter()
 # main()
 
 
-def main():
-    plate = input("plate: ")
-    if is_valid(plate):
-        print("Valid")
-    else:
-        print("Invalid")
-def is_valid(s):
-    # rule 1: length between 2 and 6 characters
-    2 < len(s) < 6
-    # rule 2: must start with atleast 2 letters
-    s[0, 2].isalpha()
-    is_num = False
-    count = 0
-    for i in range(len(s)):
-        if s[i].isdigit():
-            is_num = True
-            count+=1
-        if s[i].isalpha():
-            is_num = False
+# def main():
+#     plate = input("plate: ")
+#     if is_valid(plate):
+#         print("Valid")
+#     else:
+#         print("Invalid")
+# def is_valid(s):
+#     # rule 1: length between 2 and 6 characters
+#     2 < len(s) < 6
+#     # rule 2: must start with atleast 2 letters
+#     s[0, 2].isalpha()
+#     is_num = False
+#     count = 0
+#     for i in range(len(s)):
+#         if s[i].isdigit():
+#             is_num = True
+#             count+=1
+#         if s[i].isalpha():
+#             is_num = False
 
-        if count > 0 and is_num == False:
-            return False
+#         if count > 0 and is_num == False:
+#             return False
 
 
-main()
+# main()
 
 # while True:
 #     try:
@@ -322,36 +322,81 @@ main()
 
 
 
+# def main():
+#     plate = input("plate: ")
+#     if is_valid(plate):
+#         print("Valid")
+#     else:
+#         print("Invalid")
+# def is_valid(s):
+#     # rule 1: length between 2 and 6 characters
+#     if not (2 <= len(s) <= 6):
+#         return False
+
+#     # rule 2: must start with atleast 2 letters
+#     if not s[0: 2].isalpha():
+#         return False
+#     # rule 3: letters and digits only
+#     for char in s:
+#         if not (char.isalpha() or char.isdigit()):
+#             return False
+        
+#     is_num = False
+#     count = 0
+#     for i in range(len(s)):
+#         if s[i].isdigit():
+#             is_num = True
+#             count+=1
+#         if s[i].isalpha():
+#             is_num = False
+
+#         if count > 0 and is_num == False:
+#             return False
+#         return True
+
+
+# main()
+
+
 def main():
-    plate = input("plate: ")
+    plate = input("Plate: ")
     if is_valid(plate):
         print("Valid")
     else:
         print("Invalid")
-def is_valid(s):
-    # rule 1: length between 2 and 6 characters
-    if not (2 <= len(s) <= 6):
-        return False
 
-    # rule 2: must start with atleast 2 letters
+
+def is_valid(s):
+    # rule 1: must start with at least two letters
     if not s[0: 2].isalpha():
         return False
-    # rule 3: letters and digits only
-    for char in s:
-        if not (char.isalpha() or char.isdigit()):
-            return False
-        
+    # rule 2: contain a maximum of 6 characters and minimum 2 char
+    if not (2 <= len(s) <= 6):
+        return False
+    # rule 3: 
+        # Numbers cannot be used in the middle of a plate; 
+        # they must come at the end.
+        # The first number used cannot be a ‘0’.”
+        # No periods, spaces, or punctuation marks are allowed.
     is_num = False
     count = 0
     for i in range(len(s)):
         if s[i].isdigit():
             is_num = True
-            count+=1
-        if s[i].isalpha():
-            is_num = False
-
-        if count > 0 and is_num == False:
+            count += 1
+        # The first number used cannot be a ‘0’.”
+        if count == 1 and s[i] == "0":
             return False
+        # Numbers cannot be used in the middle of a plate; 
+        elif count > 0 and s[i].isalpha():
+            return False
+        # No periods, spaces, or punctuation marks are allowed.
+        if not s[i].isalnum():
+            return False
+    return True
+
+
 
 
 main()
+
