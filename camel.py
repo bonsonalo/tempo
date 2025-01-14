@@ -322,6 +322,7 @@ while True:
 print(f"x is {x}")
 """
 
+"""
 #           better way of saying the above code
 def main():
     x = get_int("What is x? ")
@@ -335,3 +336,55 @@ def get_int(prompt):
             
 
 main()
+
+"""
+"""
+       # Exception problem set 3
+
+    # Fuel Gauge
+
+#rule 1: prompts the user for a fraction(x/y)
+# I will use while loop to keep prompting if the input is not the desired input.
+# try else statement helps us to try the things thatg we want but at the same
+# time to catch any error that maight come up upfront
+
+while True:
+    try:
+        # prompt the user
+        response = input("Fraction: ")
+
+
+        # rule 2: each of X and Y is an integer
+        x, y = response.split("/")
+        x = int(x)
+        y = int(y)
+
+
+        # rule 3: outputs, as a percentage rounded to the nearest integer
+        def conv_to_perc(x, y):
+            return round((x / y) * 100)
+
+        percentage = conv_to_perc(x, y)
+
+        # to reprompt when x > y
+
+        if x > y:
+            continue
+
+        if percentage <= 1:
+            print("E")
+        elif percentage >= 99:
+            print("F")
+        else:
+            print(f"{percentage}%")
+        break   # to tell the code to get out of the loop if the above inputs are inputed
+
+    except ValueError:
+        # if there is value error, it will print the below and reprompt hthe questkion
+        print("please only insert integer number")
+        continue       # to tell the code to keep the loop going( to reprompt)
+    except ZeroDivisionError:
+        pass   # to tell the code to reprompt but here i didnt specifically printed anything in return it will just reprompt without a reply from the code
+
+"""
+
