@@ -388,3 +388,84 @@ while True:
 
 """
 
+
+                      # Libraries
+
+import random # this imports all the things in the random module
+"""from random import choice"""  # this imports only the choice function
+
+
+"""
+coin = random.choice(["heads", "tails"])   # the comma says that there are 2 choices and the [] says that they are a list. and the {} belong to the choice function. if we use "from random import choice", we ommit the random that we use in this line before choice.
+print(coin)
+"""
+
+
+        # random.randint(a, b)
+""" 
+number = random.randint(1, 10)  # this one gets you random integer between the range 1 and 10 . IT INCLUDES 1 AND 10
+print(number)
+"""
+      # random.shuffle(x)
+"""
+cards = ["jack", "queen", "king"]
+random.shuffle(cards)
+for card in cards:
+    print(card)
+"""
+
+      # statistics
+"""
+import statistics
+
+print(statistics.mean([100, 90]))
+"""
+     # sys
+import sys
+
+# sys.argv   argument Vector- the list of all of the word that the human typed in before hitting enter
+
+if len(sys.argv) < 2:
+    sys.exit("too few arguments") # sys.exit allows to exit if it meets the condition. unleass it will also run the below code while maintaining  this condition leading to index error
+for arg in sys.argv[1:]: # here what i did is introduced "Slice"-is a list of data structure like a list. so [1:] means starts from the 1st element or index and continues till the end. that's why after colon there was no number
+    print("hello, my name is", sys.argv[1]) # then when I run the code I should write personally on the terminal and say the name I want also in the terminal since this is comman line prompt. the [1] indicates it is the 1st index. so the name of the file is index 0 then the name we write next is index 1
+
+
+      # package - is a module hat is implemented in folder but not file
+                # is a 3rd party library that we can install in our pc to access what other peopl eimplemented for us
+
+
+     # PyPI - python package index
+     #cowsay
+     #pip- allow to install packages on your pc
+     #API- application Programming Interface- helps get information mostly from third party libraries
+     #JSON- language agnostic data exchanging between computers
+"""
+import requests # installed using pip
+import sys
+if len(sys.argv) != 2:
+. . . . sys. exit ()
+response = requests. get ("https: //itunes. apple. com/search?entity=song&limit=1&term=" + sys. argv []
+print ( response. json ( ) )
+"""
+
+"""
+import json # so this json is added in this one
+import requests
+import sys # to access command line argument
+if len(sys.argv) != 2:
+. . . . sys. exit ()
+response = requests.get ("https://itunes.apple.com/search?entity=song&limit=50&term=" + sys.argv|
+o = response. json ()
+for result in o["results"] :
+12 . . . . print (result ["trackName"] )
+"""
+"""
+. . . . goodbye ("world")
+6 def hello(name) :
+. . . . print ( f"hello, {name}")
+10 def goodbye(name) :
+. . . . print(f"goodbye, {name}")
+14 if__name__== " __main__ ":  # this means if taken as a library for other file. this wont run. unless we want to run this file
+. . . . main()
+"""
