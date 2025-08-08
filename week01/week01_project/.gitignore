@@ -1,0 +1,36 @@
+# Ignore virtual environments
+venv/
+env/
+.venv/
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.bak
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore editor folders
+.vscode/
+.idea/
+
+# Ignore environment variables and secrets
+.env
+*.env
+
+# Ignore Jupyter checkpoints (if you use notebooks)
+.ipynb_checkpoints/
+
+# Ignore test coverage and pytest files
+.coverage
+htmlcov/
+.cache/
+.pytest_cache/
