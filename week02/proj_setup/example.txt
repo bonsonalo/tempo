@@ -1,0 +1,14 @@
+conda create -p venv python==3.12 # -p is in the present working directory
+
+
+conda create -n venv python==3.12 # -n indicates in new directory
+
+
+For other time, first
+    1. Create conda venv using the sirst line command
+    2. to get to the venv, write conda avtivate venv/ and conda deactivate to stop it
+    3. inside that, install ipyjernek using 
+            pip install ipykernel
+    4. in requirement.txt, when you want to install it, go first to your venv, the use 
+            pip install -r requirement.txt    This will download everything inside without the need to install each manually. But if it is you that createdit, you will use 
+            pip freeze > requirement.txt to list all the packages you have installed sofar
