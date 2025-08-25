@@ -1,0 +1,30 @@
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDE/project settings
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Logs
+*.log
+
+# Build / distribution
+build/
+dist/
+*.egg-info/
+
+# Environment variables
+.env
