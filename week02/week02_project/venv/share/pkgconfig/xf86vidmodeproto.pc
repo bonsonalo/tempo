@@ -1,7 +1,0 @@
-prefix=/home/bonson/Desktop/mljourney/tempo/week02/week02_project/venv
-includedir=${prefix}/include
- 
-Name: XF86VidModeProto
-Description: XF86VidMode extension headers
-Version: 2.3.1
-Cflags: -I${includedir}
