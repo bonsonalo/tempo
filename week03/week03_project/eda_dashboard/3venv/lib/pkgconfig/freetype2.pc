@@ -1,0 +1,14 @@
+prefix=/home/bonson/Desktop/mljourney/tempo/week03/week03_project/eda_dashboard/3venv
+exec_prefix=/home/bonson/Desktop/mljourney/tempo/week03/week03_project/eda_dashboard/3venv
+libdir=/home/bonson/Desktop/mljourney/tempo/week03/week03_project/eda_dashboard/3venv/lib
+includedir=/home/bonson/Desktop/mljourney/tempo/week03/week03_project/eda_dashboard/3venv/include
+
+Name: FreeType 2
+URL: https://freetype.org
+Description: A free, high-quality, and portable font engine.
+Version: 26.2.20
+Requires: 
+Requires.private: zlib, libpng
+Libs: -L/home/bonson/Desktop/mljourney/tempo/week03/week03_project/eda_dashboard/3venv/lib -lfreetype
+Libs.private: 
+Cflags: -I${includedir}/freetype2

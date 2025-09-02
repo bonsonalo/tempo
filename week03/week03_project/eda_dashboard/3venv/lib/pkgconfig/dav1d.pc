@@ -1,0 +1,10 @@
+prefix=/home/bonson/Desktop/mljourney/tempo/week03/week03_project/eda_dashboard/3venv
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: libdav1d
+Description: AV1 decoding library
+Version: 1.2.1
+Libs: -L${libdir} -ldav1d
+Libs.private: -pthread -ldl
+Cflags: -I${includedir}

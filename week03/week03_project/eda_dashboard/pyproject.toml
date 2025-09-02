@@ -1,0 +1,27 @@
+[project]
+name = "eda_dashboard"
+version = "0.1.0"
+description = "A dashboard for exploratory data analysis"
+authors = [
+    { name="Bonson Alo", email="bonson2040@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "numpy",
+    "pandas",
+    "seaborn",
+    "matplotlib",
+    "seaborn",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/yourusername/eda_dashboard"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

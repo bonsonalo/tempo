@@ -1,0 +1,11 @@
+prefix=/home/bonson/Desktop/mljourney/tempo/week03/week03_project/eda_dashboard/3venv
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: GObject
+Description: GLib Type, Object, Parameter and Signal Library
+Version: 2.84.2
+Requires: glib-2.0
+Requires.private: libffi >=  3.0.0
+Libs: -L${libdir} -lgobject-2.0
+Cflags: -I${includedir}

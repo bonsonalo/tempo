@@ -1,0 +1,68 @@
+# -----------------------------
+# Python
+# -----------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+*/03venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_convert.py
+
+# -----------------------------
+# Data
+# -----------------------------
+# Ignore raw & interim datasets (keep only small samples if needed)
+data/raw/
+data/interim/
+data/processed/
+!data/raw/README.md   # allow a README explaining dataset
+
+# -----------------------------
+# Logs
+# -----------------------------
+logs/
+*.log
+
+# -----------------------------
+# Reports
+# -----------------------------
+# Ignore generated HTML, PDF, or images
+reports/figures/
+*.html
+*.pdf
+*.png
+*.jpg
+*.jpeg
+
+# -----------------------------
+# OS / IDE Specific
+# -----------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# -----------------------------
+# Environment & Dependencies
+# -----------------------------
+# Don’t ignore these, they’re useful:
+# requirements.txt
+# environment.yml
+# pyproject.toml
+
+# -----------------------------
+# Security
+# -----------------------------
+# (Optional) If you ever use secrets
+.env
+*.key
+*.pem

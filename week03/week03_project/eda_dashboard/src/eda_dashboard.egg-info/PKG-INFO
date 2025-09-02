@@ -1,0 +1,14 @@
+Metadata-Version: 2.4
+Name: eda_dashboard
+Version: 0.1.0
+Summary: A dashboard for exploratory data analysis
+Author-email: Bonson Alo <bonson2040@gmail.com>
+License: MIT
+Project-URL: Homepage, https://github.com/yourusername/eda_dashboard
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: seaborn
+Requires-Dist: matplotlib
+Requires-Dist: seaborn

@@ -1,0 +1,8 @@
+prefix=/home/bonson/Desktop/mljourney/tempo/week03/week03_project/eda_dashboard/3venv
+includedir=${prefix}/include
+
+Name: cairo-svg
+Description: SVG surface backend for cairo graphics library
+Version: 1.18.4
+Requires: cairo, libpng >=  1.4.0
+Cflags: -I${includedir}
