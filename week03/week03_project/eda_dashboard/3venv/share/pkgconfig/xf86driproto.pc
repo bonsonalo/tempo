@@ -1,7 +1,0 @@
-prefix=/home/bonson/Desktop/mljourney/tempo/week03/week03_project/eda_dashboard/3venv
-includedir=${prefix}/include
- 
-Name: XF86DRIProto
-Description: XF86DRI extension headers
-Version: 2.1.1
-Cflags: -I${includedir}/X11/dri

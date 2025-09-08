@@ -1,8 +1,0 @@
-prefix=/home/bonson/Desktop/mljourney/tempo/week03/week03_project/eda_dashboard/3venv
-includedir=${prefix}/include
-
-Name: cairo-script
-Description: script surface backend for cairo graphics library
-Version: 1.18.4
-Requires: cairo, zlib
-Cflags: -I${includedir}

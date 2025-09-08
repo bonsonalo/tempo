@@ -1,7 +1,0 @@
-prefix=/home/bonson/Desktop/mljourney/tempo/week03/week03_project/eda_dashboard/3venv
-includedir=${prefix}/include
- 
-Name: XExtProto
-Description: XExt extension headers
-Version: 7.3.0
-Cflags: -I${includedir}
