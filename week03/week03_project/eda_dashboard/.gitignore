@@ -43,6 +43,7 @@ reports/figures/
 *.jpg
 *.jpeg
 
+3venv/
 # -----------------------------
 # OS / IDE Specific
 # -----------------------------
