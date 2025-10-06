@@ -66,13 +66,6 @@ async def delete_question(question_id: int, db: db_dependency):
     db.commit()
 
 
-@app.delete("/delete_choice/{choice_id}")
-async def delete_choice(choice_id: int, db:db_dependency):
-    choice_to_delete= db.query(models.Choices).filter(models.Choices.id == choice_id).first()
 
-    if not choice_to_delete:
-        raise HTTPException(status_code=404, detail="Choice not found")
-    db.delete(choice_to_delete)
-    db.commit()
     
 
