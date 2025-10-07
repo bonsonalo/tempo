@@ -9,4 +9,4 @@ engine= create_engine(URL_DATABASE)
 
 sessionLocal= sessionmaker(autocommit=False, autoflush=False, bind= engine)
 
-Base = declarative_base()  
+Base = declarative_base()  # When you call declarative_base(), SQLAlchemy creates an internal “registry” that keeps track of every table you define later by subclassing Base
