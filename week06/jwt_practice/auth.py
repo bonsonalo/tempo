@@ -32,7 +32,7 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
-
+# user sign in
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_user(create_user_request: CreateUserRequest, db: db_dependency):
     create_user_model= Users(
@@ -44,6 +44,7 @@ async def create_user(create_user_request: CreateUserRequest, db: db_dependency)
     db.commit()
 
 
+ # user login
 @router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                                  db: db_dependency):
