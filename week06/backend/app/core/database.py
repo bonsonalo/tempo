@@ -1,9 +1,10 @@
 from sqlalchemy import create_engine 
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+import os
 
 
-DATABASE_URL= "postgresql://postgres:password@localhost:5432/backend"
+DATABASE_URL=os.envget("DB_URL")
 
 engine= create_engine(DATABASE_URL)
 
