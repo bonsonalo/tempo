@@ -14,7 +14,7 @@ database.base.metadata.create_all(bind= engine)
 
 @app.get("/user", status_code=status.HTTP_200_OK)
 def user(user: user_dependency, db: db_dependency):
-    if user in None:
+    if user is None:
         raise HTTPException(status_code=401, detail="user not validated")
     return {"User": user}
 
