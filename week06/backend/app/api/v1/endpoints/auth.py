@@ -1,16 +1,17 @@
 from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
-from pydantic import BaseModel
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from pydantic import BaseModel, field_validator
+from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
 from starlette import status
-from jose import jwt
+from jose import jwt 
 
 
 from backend.app.core.config import ALGORITHM, SECRET_KEY, db_dependency
 from passlib.context import CryptContext
 from backend.app.model.models import User
+from backend.app.utils.password_strength import validate_password_strength
 
 
 
@@ -27,6 +28,16 @@ class CreateUserRequest(BaseModel):
 class Token(BaseModel):
     token_type: str
     access_token: str
+
+class Authenticate_user(BaseModel):
+    username: str
+    password: str
+
+    @field_validator("password")
+    @classmethod
+    def password_strength(cls, value):
+        return validate_password_strength(value)
+    
 
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated= "auto")
@@ -55,11 +66,11 @@ async def login_for_access_token(user_form: Annotated[OAuth2PasswordRequestForm,
 
 
 
-def authenticate_user(username: str, password: str, db: db_dependency):
-    user = db.query(User).filter(User.username == username).first()
+def authenticate_user(auth_data: Authenticate_user, db: db_dependency):
+    user = db.query(User).filter(User.username == auth_data.username).first()
     if not user:
         return False
-    if not bcrypt_context.verify(password, user.hashed_password):
+    if not bcrypt_context.verify(auth_data.password, user.hashed_password):
         return False
     return user
 
