@@ -30,7 +30,6 @@ class Token(BaseModel):
     access_token: str
 
 class Authenticate_user(BaseModel):
-    username: str
     password: str
 
     @field_validator("password")
@@ -45,12 +44,18 @@ bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated= "auto")
 # for sign up
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_user(user: CreateUserRequest, db: db_dependency):
+    try:
+        validated_password= validate_password_strength(user.password)
+    except ValueError:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="password should include uppercase letter, lowercase letter, special letter and number" )
+    
     user_request_model= User(
         username= user.user_name,
-        hashed_password= bcrypt_context.hash(user.password)
+        hashed_password= bcrypt_context.hash(validated_password)
     )
     db.add(user_request_model)
     db.commit()
+    
 
 
 
@@ -66,11 +71,11 @@ async def login_for_access_token(user_form: Annotated[OAuth2PasswordRequestForm,
 
 
 
-def authenticate_user(auth_data: Authenticate_user, db: db_dependency):
-    user = db.query(User).filter(User.username == auth_data.username).first()
+def authenticate_user(username: str, password: str, db: db_dependency):
+    user = db.query(User).filter(User.username == username).first()
     if not user:
         return False
-    if not bcrypt_context.verify(auth_data.password, user.hashed_password):
+    if not bcrypt_context.verify(password, user.hashed_password):
         return False
     return user
 
