@@ -14,17 +14,21 @@ router= APIRouter(
 )
 
 
-@router.post("/api/products", status_code=status.HTTP_201_CREATED, response_model=Products)
+@router.post("/api/products", status_code=status.HTTP_201_CREATED)
 async def create_product(info: Products, db:db_dependency, current_user:user_dependency):
     authentication_check(current_user)
-    # category= db.query(models.Categories).filter(models.Categories.name == info.category_name).first()
-    # if not category:
-    #     raise HTTPException(detail="category problem")
+    category_connect= db.query(models.Categories).filter(models.Categories.name == info.category_name).first()
+    if not category_connect:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="category problem")
+    supplier_connect= db.query(models.Suppliers).filter(models.Suppliers.name == info.supplier_name).first()
+    if not supplier_connect:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Supplier name not found")
     db_add= models.Products(
         name= info.name,
         price= info.price,
         SKU= info.SKU,
-        category_id= info.category_id
+        category_id= category_connect.id,
+        supplier_id= supplier_connect.id
     )
     db.add(db_add)
     db.commit()
@@ -36,7 +40,7 @@ async def create_product(info: Products, db:db_dependency, current_user:user_dep
 @router.get("/api/products", status_code=status.HTTP_200_OK)
 async def get_products(current_user: user_dependency, db: db_dependency):
     authentication_check(current_user)
-    results= db.query(models.Products)
+    results= db.query(models.Products).all()
     return results
 
 @router.get("/api/products/{id}", status_code=status.HTTP_200_OK)
@@ -63,7 +67,7 @@ async def update_product(id: int, updated_to: UpdateProduct, current_user: user_
     return product_query
 
 
-@router.delete("api/products/{id}") 
+@router.delete("/api/products/{id}") 
 async def delete_product(product_id: int, current_user: user_dependency, db: db_dependency):
     authentication_check(current_user)
     product_query= db.query(models.Products).filter(models.Products.id == product_id).first()
