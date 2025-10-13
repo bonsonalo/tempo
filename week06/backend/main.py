@@ -1,13 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from backend.app.core import database
+from backend.app.model import models
 from backend.app.core.database import engine
 from starlette import status
 from backend.app.core.config import db_dependency, user_dependency
-from backend.app.api.v1.endpoints import auth
+from backend.app.api.v1.endpoints import auth, product
+
+
 
 
 app= FastAPI()
 app.include_router(auth.router)
+app.include_router(product.router)
 
 database.base.metadata.create_all(bind= engine)
 
@@ -18,3 +22,6 @@ def user(user: user_dependency, db: db_dependency):
         raise HTTPException(status_code=401, detail="user not validated")
     return {"User": user}
 
+
+
+    
