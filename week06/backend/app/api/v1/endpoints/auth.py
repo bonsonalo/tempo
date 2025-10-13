@@ -10,7 +10,7 @@ from jose import jwt
 
 from backend.app.core.config import ALGORITHM, SECRET_KEY, db_dependency
 from passlib.context import CryptContext
-from backend.app.model.models import User
+from backend.app.model.models import Users
 from backend.app.utils.password_strength import validate_password_strength
 
 
@@ -42,14 +42,14 @@ class Authenticate_user(BaseModel):
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated= "auto")
 
 # for sign up
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("/signup", status_code=status.HTTP_201_CREATED)
 async def create_user(user: CreateUserRequest, db: db_dependency):
     try:
         validated_password= validate_password_strength(user.password)
     except ValueError:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="password should include uppercase letter, lowercase letter, special letter and number" )
     
-    user_request_model= User(
+    user_request_model= Users(
         username= user.user_name,
         hashed_password= bcrypt_context.hash(validated_password)
     )
@@ -60,7 +60,7 @@ async def create_user(user: CreateUserRequest, db: db_dependency):
 
 
 # for login
-@router.post("/token", response_model= Token)
+@router.post("/login", response_model= Token)
 async def login_for_access_token(user_form: Annotated[OAuth2PasswordRequestForm, Depends()], db: db_dependency):
     user = authenticate_user(user_form.username, user_form.password, db)
     if not user:
@@ -71,8 +71,9 @@ async def login_for_access_token(user_form: Annotated[OAuth2PasswordRequestForm,
 
 
 
+
 def authenticate_user(username: str, password: str, db: db_dependency):
-    user = db.query(User).filter(User.username == username).first()
+    user = db.query(Users).filter(Users.username == username).first()
     if not user:
         return False
     if not bcrypt_context.verify(password, user.hashed_password):
