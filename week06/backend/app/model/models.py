@@ -14,7 +14,7 @@ class Users(base):
 class Products(base):
     __tablename__= "products"
 
-    id= Column(Integer, primary_key=True, index=True)
+    id= Column(Integer, primary_key=True, index=True, autoincrement=True)
     name= Column(String, unique=True)
     price= Column(DECIMAL, index=True)
     SKU= Column(String, unique=True)
@@ -28,20 +28,20 @@ class Categories(base):
     __tablename__= "categories"
 
 
-    id= Column(Integer, primary_key=True, index=True)
+    id= Column(Integer, primary_key=True, index=True, autoincrement=True)
     name= Column(String)
 
 
 class Suppliers(base):
     __tablename__= "suppliers"
 
-    id= Column(Integer, primary_key=True, index=True)
+    id= Column(Integer, primary_key=True, index=True, autoincrement=True)
     name= Column(String)
 
 class Stock(base):
     __tablename__= "stock"
 
-    id= Column(Integer, primary_key=True, index=True)
+    id= Column(Integer, primary_key=True, index=True, autoincrement=True)
     product_id= Column(Integer, ForeignKey("products.id", ondelete="CASCADE"), nullable=False)
     quantity= Column(Integer)
     movement_type= Column(String)
