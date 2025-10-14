@@ -17,10 +17,10 @@ router= APIRouter(
 @router.post("/api/products", status_code=status.HTTP_201_CREATED)
 async def create_product(info: Products, db:db_dependency, current_user:user_dependency):
     authentication_check(current_user)
-    category_connect= db.query(models.Categories).filter(models.Categories.name == info.category_name).first()
+    category_connect= db.query(models.Categories).filter(models.Categories.id == info.category_id).first()
     if not category_connect:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="category problem")
-    supplier_connect= db.query(models.Suppliers).filter(models.Suppliers.name == info.supplier_name).first()
+    supplier_connect= db.query(models.Suppliers).filter(models.Suppliers.id == info.supplier_id).first()
     if not supplier_connect:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Supplier name not found")
     db_add= models.Products(
