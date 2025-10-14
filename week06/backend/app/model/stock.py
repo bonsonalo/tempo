@@ -9,8 +9,6 @@ class Stock(BaseModel):
     movement_type: str
     date: date
     supplier_id: int
-    product_name: str
-    supplier_name: str
 
 
 class UpdateStock(Stock):
