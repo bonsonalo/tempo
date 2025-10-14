@@ -29,13 +29,6 @@ class Token(BaseModel):
     token_type: str
     access_token: str
 
-class Authenticate_user(BaseModel):
-    password: str
-
-    @field_validator("password")
-    @classmethod
-    def password_strength(cls, value):
-        return validate_password_strength(value)
     
 
 
