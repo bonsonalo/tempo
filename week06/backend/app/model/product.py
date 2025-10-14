@@ -9,8 +9,6 @@ class Products(BaseModel):
     SKU: str
     category_id: int
     supplier_id: int
-    category_name: str
-    supplier_name: str
 
 
 class UpdateProduct(BaseModel):
@@ -19,4 +17,3 @@ class UpdateProduct(BaseModel):
     SKU: Optional[str]
     category_id: Optional[int]
     supplier_id: Optional[int]
-    category_name: Optional[str]
