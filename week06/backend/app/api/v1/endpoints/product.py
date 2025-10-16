@@ -1,11 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException
-from backend.app.model.product import Products, UpdateProduct
+from typing import Optional
+from fastapi import APIRouter, Depends, HTTPException, Query
+from backend.app.model.product import Products, SortBy, UpdateProduct
 from backend.app.core.config import db_dependency, user_dependency
 from starlette import status
 from backend.app.model import models
 from backend.app.utils.authentication_check import authentication_check
 from backend.app.utils.product_available import product_available 
-from fastapi.security import HTTPAuthorizationCredentials
+
 
 
 router= APIRouter(
@@ -38,10 +39,40 @@ async def create_product(info: Products, db:db_dependency, current_user:user_dep
 
 
 @router.get("/api/products", status_code=status.HTTP_200_OK)
-async def get_products(current_user: user_dependency, db: db_dependency):
+async def get_products(current_user: user_dependency, db: db_dependency,
+                       sort_by: SortBy= Query(SortBy.asc),
+                       category_name: Optional[str] = Query(None), 
+                       product_name: Optional[str] = Query(None)):
     authentication_check(current_user)
-    results= db.query(models.Products).all()
-    return results
+    if product_name is not None and category_name is not None:
+        get_category_full= db.query(models.Categories).filter(models.Categories.name == category_name).first()
+        get_category_id= get_category_full.id
+        get_products_by_category= db.query(models.Products).filter(models.Products.id == get_category_id).all()
+        get_products_by_product_name= db.query(models.Products).filter(models.Products.name == product_name).all()
+        both_search= [pro for pro in get_products_by_category if pro in get_products_by_product_name]
+        if sort_by == "asc":
+            return sorted(both_search, key=lambda p: p.name, reverse=False)
+        elif sort_by == "desc":
+            return sorted(both_search, reverse=True)
+    
+    elif product_name is not None:
+        get_products_by_product_name= db.query(models.Products).filter(models.Products.name == product_name).all()
+        return get_products_by_product_name
+    elif category_name is not None:
+        get_category_full= db.query(models.Categories).filter(models.Categories.name == category_name).first()
+        get_category_id= get_category_full.id
+        get_products_by_category= db.query(models.Products).filter(models.Products.category_id == get_category_id).all()
+        if sort_by == "asc":
+            return sorted(get_products_by_category, key=lambda p: p.name, reverse=False)
+        elif sort_by == "desc":
+            return sorted(get_products_by_category, key=lambda p: p.name, reverse=True)
+    else:
+        results= db.query(models.Products).all()
+        if sort_by == "asc":
+            return sorted(results, key=lambda p: p.name, reverse=False)
+        elif sort_by == "desc":
+            return sorted(results, key=lambda p: p.name, reverse=True)
+
 
 @router.get("/api/products/{id}", status_code=status.HTTP_200_OK)
 async def get_product_by_key(id: int, current_user: user_dependency, db: db_dependency):
