@@ -3,7 +3,7 @@ from starlette import status
 
 from backend.app.model import models
 from backend.app.model.stock import Stock, UpdateStock
-from backend.app.core.config import user_dependency, db_dependency
+from backend.app.core.config import user_dependency, db_dependency, user_authentication_dependency, admin_dependency, superadmin_dependency
 from backend.app.utils.authentication_check import authentication_check
 from backend.app.utils.product_available import product_available
 
@@ -15,7 +15,7 @@ router = APIRouter(
 
 
 @router.post("/api/stock", status_code=status.HTTP_201_CREATED)
-async def create_stock(info: Stock, current_user: user_dependency, db: db_dependency):
+async def create_stock(info: Stock, current_user: admin_dependency, db: db_dependency):
     authentication_check(current_user)
     product_connect= db.query(models.Products).filter(models.Products.id == info.product_id).first()
     if not product_connect:
@@ -50,7 +50,7 @@ async def get_stock_by_key(id: int, current_user: user_dependency, db: db_depend
     return category_by_id
 
 @router.put("/api/stock/{id}")
-async def update_stock(id: int, updated_to: UpdateStock, current_user: user_dependency, db: db_dependency):
+async def update_stock(id: int, updated_to: UpdateStock, current_user: admin_dependency, db: db_dependency):
     authentication_check(current_user)
     product_query= db.query(models.Stock).filter(models.Stock.id == id).first()
     product_available(product_query)
@@ -70,7 +70,7 @@ async def update_stock(id: int, updated_to: UpdateStock, current_user: user_depe
 
 
 @router.delete("/api/category/{id}") 
-async def delete_stock(product_id: int, current_user: user_dependency, db: db_dependency):
+async def delete_stock(product_id: int, current_user: superadmin_dependency, db: db_dependency):
     authentication_check(current_user)
     product_query= db.query(models.Stock).filter(models.Stock.id == product_id).first()
     product_available(product_query)
