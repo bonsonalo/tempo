@@ -12,7 +12,7 @@ from backend.app.core.config import ALGORITHM, SECRET_KEY, db_dependency
 from passlib.context import CryptContext
 from backend.app.model.models import Users
 from backend.app.utils.password_strength import validate_password_strength
-
+from backend.app.core.config import superadmin_dependency
 
 
 
@@ -24,6 +24,7 @@ router= APIRouter(
 class CreateUserRequest(BaseModel):
     user_name: str
     password: str
+    role: str
 
 class Token(BaseModel):
     token_type: str
@@ -44,7 +45,8 @@ async def create_user(user: CreateUserRequest, db: db_dependency):
     
     user_request_model= Users(
         username= user.user_name,
-        hashed_password= bcrypt_context.hash(validated_password)
+        hashed_password= bcrypt_context.hash(validated_password),
+        role= user.role
     )
     db.add(user_request_model)
     db.commit()
@@ -58,10 +60,21 @@ async def login_for_access_token(user_form: Annotated[OAuth2PasswordRequestForm,
     user = authenticate_user(user_form.username, user_form.password, db)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail= "couldnot validate the user")
-    token= create_access_token(user.username, user.id, timedelta(minutes=20))
+    token= create_access_token(user.username, user.id, user.role, timedelta(minutes=20))
 
     return {"access_token": token, "token_type": "bearer"}
 
+# to upgrade or downgrade a user role
+
+@router.put("/promote/{user_id}")
+async def promote_user(id: int, new_role: str, current_user: superadmin_dependency, db: db_dependency):
+    user = db.query(Users).filter(Users.id == id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="user not found")
+    user.role = new_role
+    db.commit()
+    db.refresh(user)
+    return {"message": f"User {user.username} promoted to {new_role}"}
 
 
 
@@ -73,8 +86,8 @@ def authenticate_user(username: str, password: str, db: db_dependency):
         return False
     return user
 
-def create_access_token(username: str, user_id: int, expires_delta: timedelta):
-    encode = {"sub": username, "id": user_id}
+def create_access_token(username: str, user_id: int, role: str, expires_delta: timedelta):
+    encode = {"sub": username, "id": user_id, "role": role}
     expires= datetime.now(timezone.utc) + expires_delta
     encode.update({"exp": expires})
 
