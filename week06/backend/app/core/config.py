@@ -1,5 +1,5 @@
 from .database import SessionLocal
-from typing import Annotated
+from typing import Annotated, List
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
@@ -36,14 +36,35 @@ def get_current_user(token: Annotated[str, Depends(oauth_bearer)]):
         payload= jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username:str = payload.get("sub")
         user_id: int= payload.get("id")
+        role: str= payload.get("role")
 
-        if username is None or user_id is None:
+        if username is None or user_id is None or role is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="couldnot be validated")
-        return {"username": username, "id": user_id}
+        return {"username": username, "id": user_id, "role": role}
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="couldnot be validated")
     
 
-user_dependency= Annotated[dict, Depends(get_current_user)]
+user_authentication_dependency= Annotated[dict, Depends(get_current_user)]
 
 
+def role_required(allowed_roles: List[str]):
+    def wrapper(current_user: user_authentication_dependency):
+        user_role= current_user.get("role")
+        if not user_role:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User has no role assigned"
+            )
+
+        if user_role not in allowed_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You do not have permission for this action"
+            )
+        return current_user
+    return wrapper
+
+user_dependency= Annotated[dict, Depends(role_required(["user", "admin", "superadmin"]))]
+admin_dependency= Annotated[dict, Depends(role_required(["admin", "superadmin"]))]
+superadmin_dependency= Annotated[dict, Depends(role_required(["superadmin"]))]
