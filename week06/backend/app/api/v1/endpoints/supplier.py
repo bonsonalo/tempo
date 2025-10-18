@@ -3,7 +3,7 @@ from fastapi import APIRouter
 
 
 from backend.app.utils.authentication_check import authentication_check
-from backend.app.core.config import user_dependency, db_dependency
+from backend.app.core.config import user_dependency, db_dependency, user_authentication_dependency, admin_dependency, superadmin_dependency
 from backend.app.model import models
 from backend.app.model.models import Suppliers
 from backend.app.model.supplier import Supplier, UpdateSupplier
@@ -21,7 +21,7 @@ router = APIRouter(
 
 
 @router.post("/api/suppliers", status_code=status.HTTP_201_CREATED)
-async def create_supplier(info: Supplier, current_user: user_dependency, db: db_dependency):
+async def create_supplier(info: Supplier, current_user: admin_dependency, db: db_dependency):
     authentication_check(current_user)
     db_add= models.Suppliers(
         name= info.name
@@ -45,7 +45,7 @@ async def get_supplier_by_key(id: int, current_user: user_dependency, db: db_dep
     return category_by_id
 
 @router.put("/api/suppliers/{id}")
-async def update_supplier(id: int, updated_to: UpdateSupplier, current_user: user_dependency, db: db_dependency):
+async def update_supplier(id: int, updated_to: UpdateSupplier, current_user: admin_dependency, db: db_dependency):
     authentication_check(current_user)
     product_query= db.query(models.Suppliers).filter(models.Suppliers.id == id).first()
     product_available(product_query)
@@ -58,7 +58,7 @@ async def update_supplier(id: int, updated_to: UpdateSupplier, current_user: use
 
 
 @router.delete("/api/suppliers/{id}") 
-async def delete_supplier(product_id: int, current_user: user_dependency, db: db_dependency):
+async def delete_supplier(product_id: int, current_user: superadmin_dependency, db: db_dependency):
     authentication_check(current_user)
     product_query= db.query(models.Suppliers).filter(models.Suppliers.id == product_id).first()
     product_available(product_query)
