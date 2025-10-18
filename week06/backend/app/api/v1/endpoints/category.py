@@ -5,7 +5,7 @@ from starlette import status
 from backend.app.model import models
 from backend.app.model.category import Category, UpdateCategory
 from backend.app.utils.product_available import product_available
-from backend.app.core.config import user_dependency, db_dependency
+from backend.app.core.config import user_dependency, db_dependency, user_authentication_dependency, admin_dependency, superadmin_dependency
 from backend.app.utils.authentication_check import authentication_check
 
 
@@ -18,7 +18,7 @@ router = APIRouter(
 
 
 @router.post("/api/category", status_code=status.HTTP_201_CREATED, response_model=Category)
-async def create_category(info: Category, current_user: user_dependency, db: db_dependency):
+async def create_category(info: Category, current_user: admin_dependency, db: db_dependency):
     authentication_check(current_user)
     db_add= models.Categories(
         name= info.name
@@ -43,7 +43,7 @@ async def get_category_by_key(id: int, current_user: user_dependency, db: db_dep
     return category_by_id
 
 @router.put("/api/category/{id}")
-async def update_category(id: int, updated_to: UpdateCategory, current_user: user_dependency, db: db_dependency):
+async def update_category(id: int, updated_to: UpdateCategory, current_user: admin_dependency, db: db_dependency):
     authentication_check(current_user)
     product_query= db.query(models.Categories).filter(models.Categories.id == id).first()
     product_available(product_query)
@@ -56,7 +56,7 @@ async def update_category(id: int, updated_to: UpdateCategory, current_user: use
 
 
 @router.delete("/api/category/{id}") 
-async def delete_category(product_id: int, current_user: user_dependency, db: db_dependency):
+async def delete_category(product_id: int, current_user: superadmin_dependency, db: db_dependency):
     authentication_check(current_user)
     product_query= db.query(models.Categories).filter(models.Categories.id == product_id).first()
     product_available(product_query)
