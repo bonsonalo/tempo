@@ -10,6 +10,7 @@ class Users(base):
     id= Column(Integer, primary_key=True, index= True)
     username= Column(String, unique=True)
     hashed_password= Column(String)
+    role = Column(String, default="user")
 
 class Products(base):
     __tablename__= "products"
