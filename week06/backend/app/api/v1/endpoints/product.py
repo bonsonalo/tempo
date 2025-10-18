@@ -1,7 +1,7 @@
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from backend.app.model.product import Products, SortBy, UpdateProduct
-from backend.app.core.config import db_dependency, user_dependency
+from backend.app.core.config import db_dependency, user_dependency, admin_dependency, superadmin_dependency
 from starlette import status
 from backend.app.model import models
 from backend.app.utils.authentication_check import authentication_check
@@ -16,7 +16,7 @@ router= APIRouter(
 
 
 @router.post("/api/products", status_code=status.HTTP_201_CREATED)
-async def create_product(info: Products, db:db_dependency, current_user:user_dependency):
+async def create_product(info: Products, db:db_dependency, current_user:admin_dependency):
     authentication_check(current_user)
     category_connect= db.query(models.Categories).filter(models.Categories.id == info.category_id).first()
     if not category_connect:
@@ -57,7 +57,10 @@ async def get_products(current_user: user_dependency, db: db_dependency,
     
     elif product_name is not None:
         get_products_by_product_name= db.query(models.Products).filter(models.Products.name == product_name).all()
-        return get_products_by_product_name
+        if sort_by == "asc":
+            return sorted(get_products_by_product_name, key=lambda p: p.name, reverse=False)
+        elif sort_by == "desc":
+            return sorted(get_products_by_product_name, key=lambda p: p.name, reverse=True)
     elif category_name is not None:
         get_category_full= db.query(models.Categories).filter(models.Categories.name == category_name).first()
         get_category_id= get_category_full.id
@@ -82,7 +85,7 @@ async def get_product_by_key(id: int, current_user: user_dependency, db: db_depe
     return product_by_id
 
 @router.put("/api/products/{id}")
-async def update_product(id: int, updated_to: UpdateProduct, current_user: user_dependency, db: db_dependency):
+async def update_product(id: int, updated_to: UpdateProduct, current_user: admin_dependency, db: db_dependency):
     authentication_check(current_user)
     product_query= db.query(models.Products).filter(models.Products.id == id).first()
     product_available(product_query)
@@ -99,7 +102,7 @@ async def update_product(id: int, updated_to: UpdateProduct, current_user: user_
 
 
 @router.delete("/api/products/{id}") 
-async def delete_product(product_id: int, current_user: user_dependency, db: db_dependency):
+async def delete_product(product_id: int, current_user: superadmin_dependency, db: db_dependency):
     authentication_check(current_user)
     product_query= db.query(models.Products).filter(models.Products.id == product_id).first()
     product_available(product_query)
