@@ -13,7 +13,7 @@ from passlib.context import CryptContext
 from backend.app.model.models import Users
 from backend.app.utils.password_strength import validate_password_strength
 from backend.app.core.config import superadmin_dependency
-
+from backend.app.core.logger import logger
 
 
 router= APIRouter(
@@ -72,9 +72,11 @@ async def login_for_access_token(user_form: Annotated[OAuth2PasswordRequestForm,
 async def promote_user(id: int, new_role: str, current_user: superadmin_dependency, db: db_dependency):
     user = db.query(Users).filter(Users.id == id).first()
     if not user:
+        logger.error("user's username doesnt match the username")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="user not found")
     user.role = new_role
     db.commit()
+    logger.info("successfully user role commited the new role")
     db.refresh(user)
     
 @router.post("/refresh")
