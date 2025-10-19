@@ -10,20 +10,28 @@ from backend.app.utils.product_available import product_available
 
 
 router= APIRouter(
-    prefix= "/product",
+    prefix= "/api/products",
     tags=["product"]
 )
 
 
-@router.post("/api/products", status_code=status.HTTP_201_CREATED)
-async def create_product(info: Products, db:db_dependency, current_user:admin_dependency):
+@router.post("/create", status_code=status.HTTP_201_CREATED)
+async def create_product(info: Products, db:db_dependency, current_user: admin_dependency):
     authentication_check(current_user)
     category_connect= db.query(models.Categories).filter(models.Categories.id == info.category_id).first()
+    print("category_connect", category_connect)
     if not category_connect:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="category problem")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="category not found")
+    
+    if info.category_id not in models.Categories.id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="category not found")
+    
+
     supplier_connect= db.query(models.Suppliers).filter(models.Suppliers.id == info.supplier_id).first()
     if not supplier_connect:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Supplier name not found")
+    if info.supplier_id not in models.Suppliers.id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Supplier not found")
     db_add= models.Products(
         name= info.name,
         price= info.price,
@@ -38,7 +46,7 @@ async def create_product(info: Products, db:db_dependency, current_user:admin_de
 
 
 
-@router.get("/api/products", status_code=status.HTTP_200_OK)
+@router.get("/get_all", status_code=status.HTTP_200_OK)
 async def get_products(current_user: user_dependency, db: db_dependency,
                        sort_by: SortBy= Query(SortBy.asc),
                        category_name: Optional[str] = Query(None), 
@@ -50,41 +58,41 @@ async def get_products(current_user: user_dependency, db: db_dependency,
         get_products_by_category= db.query(models.Products).filter(models.Products.id == get_category_id).all()
         get_products_by_product_name= db.query(models.Products).filter(models.Products.name == product_name).all()
         both_search= [pro for pro in get_products_by_category if pro in get_products_by_product_name]
-        if sort_by == "asc":
-            return sorted(both_search, key=lambda p: p.name, reverse=False)
+        if sort_by == "asc":   # accept columns from the products
+            return sorted(both_search, key=lambda p: p.id, reverse=False)
         elif sort_by == "desc":
             return sorted(both_search, reverse=True)
     
     elif product_name is not None:
         get_products_by_product_name= db.query(models.Products).filter(models.Products.name == product_name).all()
         if sort_by == "asc":
-            return sorted(get_products_by_product_name, key=lambda p: p.name, reverse=False)
+            return sorted(get_products_by_product_name, key=lambda p: p.id, reverse=False)
         elif sort_by == "desc":
-            return sorted(get_products_by_product_name, key=lambda p: p.name, reverse=True)
+            return sorted(get_products_by_product_name, key=lambda p: p.id, reverse=True)
     elif category_name is not None:
         get_category_full= db.query(models.Categories).filter(models.Categories.name == category_name).first()
         get_category_id= get_category_full.id
         get_products_by_category= db.query(models.Products).filter(models.Products.category_id == get_category_id).all()
         if sort_by == "asc":
-            return sorted(get_products_by_category, key=lambda p: p.name, reverse=False)
+            return sorted(get_products_by_category, key=lambda p: p.id, reverse=False)
         elif sort_by == "desc":
-            return sorted(get_products_by_category, key=lambda p: p.name, reverse=True)
+            return sorted(get_products_by_category, key=lambda p: p.id, reverse=True)
     else:
         results= db.query(models.Products).all()
         if sort_by == "asc":
-            return sorted(results, key=lambda p: p.name, reverse=False)
+            return sorted(results, key=lambda p: p.id, reverse=False)
         elif sort_by == "desc":
-            return sorted(results, key=lambda p: p.name, reverse=True)
+            return sorted(results, key=lambda p: p.id, reverse=True)
 
 
-@router.get("/api/products/{id}", status_code=status.HTTP_200_OK)
+@router.get("/get/{id}", status_code=status.HTTP_200_OK)
 async def get_product_by_key(id: int, current_user: user_dependency, db: db_dependency):
     authentication_check(current_user)
     product_by_id= db.query(models.Products).filter(models.Products.id == id).first()
     product_available(product_by_id)
     return product_by_id
 
-@router.put("/api/products/{id}")
+@router.put("/update/{id}")
 async def update_product(id: int, updated_to: UpdateProduct, current_user: admin_dependency, db: db_dependency):
     authentication_check(current_user)
     product_query= db.query(models.Products).filter(models.Products.id == id).first()
@@ -101,7 +109,7 @@ async def update_product(id: int, updated_to: UpdateProduct, current_user: admin
     return product_query
 
 
-@router.delete("/api/products/{id}") 
+@router.delete("/delete/{product_id}") 
 async def delete_product(product_id: int, current_user: superadmin_dependency, db: db_dependency):
     authentication_check(current_user)
     product_query= db.query(models.Products).filter(models.Products.id == product_id).first()
