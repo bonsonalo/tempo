@@ -23,7 +23,7 @@ class Products(base):
     category= relationship("Categories", back_populates="product")
     supplier_id= Column(Integer, ForeignKey("suppliers.id", ondelete="CASCADE"), nullable=False) # use ondelete="CASCADE" to automatically delete related records when the parent is deleted
     supplier= relationship("Suppliers", back_populates="supplier_product")
-    stock= relationship("Stock", back_populates="product_stock")
+    stock= relationship("Stock", back_populates="product_stock", cascade="all, delete-orphan")
 
 
 class Categories(base):
