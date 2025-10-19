@@ -12,12 +12,12 @@ from backend.app.utils.authentication_check import authentication_check
 
 
 router = APIRouter(
-    prefix= "/category",
+    prefix= "/api/category",
     tags= ["category"]
 )
 
 
-@router.post("/api/category", status_code=status.HTTP_201_CREATED, response_model=Category)
+@router.post("/create", status_code=status.HTTP_201_CREATED, response_model=Category)
 async def create_category(info: Category, current_user: admin_dependency, db: db_dependency):
     authentication_check(current_user)
     db_add= models.Categories(
@@ -29,20 +29,20 @@ async def create_category(info: Category, current_user: admin_dependency, db: db
     db.refresh(db_add)
     return db_add
 
-@router.get("/api/category", status_code=status.HTTP_200_OK)
+@router.get("/get_all", status_code=status.HTTP_200_OK)
 async def get_category(current_user: user_dependency, db: db_dependency):
     authentication_check(current_user)
     results= db.query(models.Categories).all()
     return results
 
-@router.get("/api/category/{id}", status_code=status.HTTP_200_OK)
+@router.get("/get/{id}", status_code=status.HTTP_200_OK)
 async def get_category_by_key(id: int, current_user: user_dependency, db: db_dependency):
     authentication_check(current_user)
     category_by_id= db.query(models.Categories).filter(models.Categories.id == id).first()
     product_available(category_by_id)
     return category_by_id
 
-@router.put("/api/category/{id}")
+@router.put("/update/{id}")
 async def update_category(id: int, updated_to: UpdateCategory, current_user: admin_dependency, db: db_dependency):
     authentication_check(current_user)
     product_query= db.query(models.Categories).filter(models.Categories.id == id).first()
@@ -55,7 +55,7 @@ async def update_category(id: int, updated_to: UpdateCategory, current_user: adm
     return product_query
 
 
-@router.delete("/api/category/{id}") 
+@router.delete("/delete/{id}") 
 async def delete_category(product_id: int, current_user: superadmin_dependency, db: db_dependency):
     authentication_check(current_user)
     product_query= db.query(models.Categories).filter(models.Categories.id == product_id).first()
