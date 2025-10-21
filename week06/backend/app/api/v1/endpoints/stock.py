@@ -4,6 +4,7 @@ from starlette import status
 from backend.app.model import models
 from backend.app.model.stock import Stock, UpdateStock
 from backend.app.core.config import user_dependency, db_dependency, user_authentication_dependency, admin_dependency, superadmin_dependency
+from backend.app.service.stock_service import create_stock_service
 from backend.app.utils.authentication_check import authentication_check
 from backend.app.utils.product_available import product_available
 
@@ -17,24 +18,10 @@ router = APIRouter(
 @router.post("/api/stock", status_code=status.HTTP_201_CREATED)
 async def create_stock(info: Stock, current_user: admin_dependency, db: db_dependency):
     authentication_check(current_user)
-    product_connect= db.query(models.Products).filter(models.Products.id == info.product_id).first()
-    if not product_connect:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="product name not found !")
-    supplier_connect= db.query(models.Suppliers).filter(models.Suppliers.id  == info.supplier_id).first()
-    if not supplier_connect:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="supplier name not found !")
-    db_add= models.Stock(
-        quantity= info.quantity,
-        movement_type= info.movement_type,
-        date= info.date,
-        supplier_id= supplier_connect.id,
-        product_id= product_connect.id
-
-    )
-    db.add(db_add)
-    db.commit()
-    db.refresh(db_add)
-    return db_add
+    try:
+        return create_stock_service(info, db)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 @router.get("/api/stock", status_code=status.HTTP_200_OK)
 async def get_stock(current_user: user_dependency, db: db_dependency):
