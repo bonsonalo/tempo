@@ -6,6 +6,10 @@ from backend.app.core.logger import logger
 
 from sqlalchemy.orm import Session
 
+from backend.app.utils.product_available import product_available
+
+
+
 
 
 
@@ -44,3 +48,13 @@ def get_category_schema(db: Session,
     logger.info(f"fetched {len(results)} products successfully")
 
     return results
+
+
+#get by id
+
+def get_category_by_id_service(id: int,db: Session):
+    category_by_id= db.query(models.Categories).filter(models.Categories.id == id).first()
+    
+    if not category_by_id:
+        raise ValueError(f"no category found with id: {id}")
+    return category_by_id
