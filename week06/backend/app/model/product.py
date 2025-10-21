@@ -13,8 +13,8 @@ class Products(BaseModel):
 
 
 class UpdateProduct(BaseModel):
-    name: Optional[str]
-    price: Optional[float]
-    SKU: Optional[str]
-    category_id: Optional[int]
-    supplier_id: Optional[int]
+    name: Optional[str]= Field(None)
+    price: Optional[float]= Field(None)
+    SKU: Optional[str]= Field(None)
+    category_id: Optional[int]= Field(None)
+    supplier_id: Optional[int]= Field(None)
