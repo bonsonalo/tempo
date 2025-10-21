@@ -16,7 +16,7 @@ from backend.app.utils.product_available import product_available
 
 
 router = APIRouter(
-    prefix= "api/supplier",
+    prefix= "/api/supplier",
     tags= ["supplier"]
 )
 
