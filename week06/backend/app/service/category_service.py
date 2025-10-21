@@ -58,3 +58,24 @@ def get_category_by_id_service(id: int,db: Session):
     if not category_by_id:
         raise ValueError(f"no category found with id: {id}")
     return category_by_id
+
+#update
+
+def update_category_service(id: int, updated_to: UpdateCategory, db:Session):
+    product_query= db.query(models.Categories).filter(models.Categories.id == id).first()
+    if updated_to.name is not None:
+        product_query.name = updated_to.name
+
+    db.commit()
+    db.refresh(product_query)
+    return product_query
+
+# delete
+
+def delete_category_service(product_id: int, db: Session):
+    product_query= db.query(models.Categories).filter(models.Categories.id == product_id).first()
+    product_available(product_query)
+    db.delete(product_query)
+    logger.info("successfully deleted")
+    db.commit()
+ 
