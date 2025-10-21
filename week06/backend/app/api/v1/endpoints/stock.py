@@ -39,7 +39,7 @@ async def update_stock(id: int, updated_to: UpdateStock, current_user: admin_dep
     return update_stock_service(id, updated_to, db)
 
 
-@router.delete("/delete/{id}") 
+@router.delete("/delete/{product_id}") 
 async def delete_stock(product_id: int, current_user: superadmin_dependency, db: db_dependency):
     authentication_check(current_user)
     return delete_stock_service(product_id, db)
