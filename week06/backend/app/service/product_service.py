@@ -1,13 +1,12 @@
 
 from sqlalchemy.orm import Session
 from typing import Optional
-from fastapi import Depends, HTTPException, Query
-from starlette import status
+
+
 
 from backend.app.model import models
 from backend.app.core.logger import logger
 from backend.app.model.product import Products, UpdateProduct
-from backend.app.utils.authentication_check import authentication_check
 from backend.app.utils.product_available import product_available 
 
 
